@@ -2,7 +2,6 @@ var fattyApp = angular.module('fattyApp', ['ngRoute']);
 
 fattyApp.factory('Workout', function() {
 	return {
-		sequenceIdx: -1,
 		sequences: [
 	    	{
 	    		id: 0,
@@ -13,10 +12,9 @@ fattyApp.factory('Workout', function() {
 	    		id: 1
 	    	}
 		],
-		roundIdx: 0,
 		rounds: {
-			total: 1,
-			rest: 60
+			total: 2,
+			rest: 5
 		}
 	}
 });
@@ -60,10 +58,13 @@ fattyApp.controller('mainController', function($scope, Workout) {
 fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	$scope.workout = Workout;
 	
+	var sequenceIdx = 0;
+	var roundIdx = 0;
+	
 	// prepare sounds
-	$scope.beep = createBeeper("asset/beep.mp3");
-	$scope.bleep = createBeeper("asset/bleep.mp3");
-	$scope.tada = createBeeper("asset/tada.mp3");
+	var beep = createBeeper("asset/beep.mp3");
+	var bleep = createBeeper("asset/bleep.mp3");
+	var tada = createBeeper("asset/tada.mp3");
 
 
 	// Clean sequences array
@@ -95,29 +96,35 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	var rounds = $scope.workout.rounds;
 	var totalDuration = (sequencesDuration * rounds.total) + (rounds.rest * (rounds.total - 1));
 
-	// Prepare general clock
-	$scope.generalCounter = $('#general-counter').FlipClock(totalDuration, {
+	/*
+	 * Prepare general clock
+	 */
+	var generalCounter = $('#general-counter').FlipClock(totalDuration, {
         clockFace: 'MinuteCounter',
         countdown: true,
         autoStart: false
     });
 
-    // Prepare sequence clock
-    $scope.callbacks = {
+    /*
+     * Prepare sequence clock
+     * Callback functions are used to edit
+     * start & stop whitout recreat the clock
+     */
+    var callbacks = {
     	sequence: {
     		start: function() {},
     		stop: function() {}
     	}
     }
     var cbSequenceStart = function() {
-    	$scope.callbacks.sequence.start();
+    	callbacks.sequence.start();
     }
 
 	var cbSequenceStop = function() {
-    	$scope.callbacks.sequence.stop();
+    	callbacks.sequence.stop();
     }
 
-    $scope.sequenceCounter = $('#sequence-counter').FlipClock(0, {
+    var sequenceCounter = $('#sequence-counter').FlipClock(0, {
         clockFace: 'MinuteCounter',
         countdown: true,
         autoStart: false,
@@ -128,108 +135,113 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
     });
 
 
+    /***********************
+     * Functions
+     ***********************/
 
 	$scope.startWorkout = function() {
-		$scope.generalCounter.start();
-		$scope.nextSequence();
+		generalCounter.start();
+		nextSequence();
 	};
 
 	$scope.endWorkout = function() {
-		$scope.tada();
+		tada();
 	};
 
 	/**
 	 * Starts the next sequence or starts then next round 
 	 * if all sequences are ended.
 	 */
-	$scope.nextSequence = function() {
-		if (hasNextSequence()) {
+	var nextSequence = function() {
+		if (hasSequence()) {
 			// start next exercice and increment the sequence index
-			var nextSequence = $scope.workout.sequences[ ++$scope.workout.sequenceIdx ];
-			$scope.startExercice( nextSequence );
-		} 
-
-		// if we're already done the last sequence
-		// start the next round
-		else if (hasNextRound()) {
-			// round rest before run the next round
-			$scope.startRest($scope.workout.rounds.rest, $scope.nextRound);		
-		} 
-
-		// ends workout
-		else {
-			$scope.endWorkout();
-		}
+			var nextSequence = sequences[ sequenceIdx++ ];
+			startExercice( nextSequence );
+		} else {
+			nextRound();
+		}		
 	};
 
 	/**
 	 * Starts the next round or ends the workout 
 	 * if the last round is over.
 	 */
-	$scope.nextRound = function() {
-		$scope.workout.roundIdx++;
-		$scope.workout.sequenceIdx = 0;
-		$scope.nextSequence();
+	var nextRound = function() {
+		if (hasNextRound()) {
+			roundIdx++;
+			sequenceIdx = 0;
+
+			// round rest before run the next sequence
+			startRest(rounds.rest, nextSequence);		
+		} else {
+			$scope.endWorkout();
+		}
 	}
 
 	/**
 	 * Starts exercice and start rest after counter ends, 
 	 * or starts the next sequence if no rest
 	 */
-	$scope.startExercice = function(sequence) {
+	var startExercice = function(sequence) {
 
-		$scope.callbacks.sequence = {
+		callbacks.sequence = {
 			start: function() {
 				//$scope.sequenceMessage = 'Exercice';
-        		$scope.bleep();
+        		bleep();
         	},
         	stop: function() {
         		// for the last sequence we do only the 
         		// round rest, not the sequence rest
-        		if (!isLastSequence() && sequence.rest != 0) {
-        			$scope.startRest(sequence.rest, $scope.nextSequence);
+        		if (hasNextSequence() && sequence.rest != 0) {
+        			startRest(sequence.rest, nextSequence);
         		} else {
-        			$scope.nextSequence();
+        			nextSequence();
         		}
         	}
 		};
 
-		$scope.sequenceCounter.setTime(sequence.exercice);
-		$scope.sequenceCounter.start();
+		sequenceCounter.setTime(sequence.exercice);
+		sequenceCounter.start();
 	};
 
 	/**
 	 * Start a rest period and run the 
 	 * `next` function after the counter stop
 	 */
-	$scope.startRest = function(duration, next) {
-		$scope.callbacks.sequence = {
+	var startRest = function(duration, next) {
+		callbacks.sequence = {
 			start: function() {
 				//$scope.sequenceMessage = 'Rest';
-        		$scope.beep();
+        		beep();
         	},
         	stop: function() {
         		next();
         	}
 		};
 
-		$scope.sequenceCounter.setTime(duration);
-		$scope.sequenceCounter.start();
+		sequenceCounter.setTime(duration);
+		sequenceCounter.start();
 	};
 
-	var isLastSequence = function() {
-		return $scope.workout.sequenceIdx == $scope.workout.sequences.length - 1;
+
+	/*
+	 * There is a sequence at idx
+	 */
+	var hasSequence = function() {
+		return sequenceIdx < sequences.length;
 	}
 
-	var isLastRound = function() {
-		return $scope.workout.roundIdx == $scope.workout.rounds.total - 1;
-	}
-
+	/*
+	 * There one more sequence at idx + 1
+	 */
 	var hasNextSequence = function() {
-		return $scope.workout.sequenceIdx < $scope.workout.sequences.length - 1;
+		return sequenceIdx < sequences.length - 1;
 	}
 
+	/*
+	 * There is one more round
+	 */
 	var hasNextRound = function() {
-		return $scope.workout.roundIdx < $scope.workout.rounds.total - 1;
+		return roundIdx < rounds.total - 1;
 	}
 });
