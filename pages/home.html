@@ -9,9 +9,11 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Sequences</div>
 		<div class="panel-body">
-			<div ng-repeat="seq in sequences" class="form-group">
+			<div ng-repeat="seq in workout.sequences" class="form-group">
 				<div class="col-sm-3 " ng-show="showAddSequence(seq)">
-					<button type="button" class="pull-right btn btn-default" ng-click="addSequence()"><span class="glyphicon glyphicon-plus"></span> Add sequence</button>
+					<button type="button" class="pull-right btn btn-default" ng-click="addSequence()">
+						<span class="glyphicon glyphicon-plus"></span> Add sequence
+					</button>
 				</div>
 				
 
@@ -19,18 +21,18 @@
 				<div class="col-sm-3" ng-hide="showLabel(seq) || showAddSequence(seq)"></div>
 				<div class="col-sm-3">
 					<div class="input-group">
-						<input type="number" class="form-control" ng-model="seq.exercice" placeholder="time" min="10" step="10">
+						<input type="number" class="form-control" ng-model="seq.exercice" placeholder="time" min="10" step="10" required>
 						<span class="input-group-addon">Seconds</span>
 					</div>
 					
 				</div>
 
 
-				<label class="col-sm-3 control-label" ng-show="showLabel(seq)">Rest duration 	</label>
+				<label class="col-sm-3 control-label" ng-show="showLabel(seq)">Rest duration</label>
 				<div class="col-sm-3" ng-hide="showLabel(seq)"></div>
 				<div class="col-sm-3">
 					<div class="input-group">
-						<input type="number" class="form-control" ng-model="seq.rest" placeholder="time" min="0" step="10">
+						<input type="number" class="form-control" ng-model="seq.rest" placeholder="time" min="0" step="10" required>
 						<span class="input-group-addon">Seconds</span>
 					</div>
 				</div>
@@ -45,7 +47,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Number of rounds</label>
 				<div class="col-sm-2">
-					<input type="number" class="form-control" ng-model="rounds" placeholder="time" min="1">
+					<input type="number" class="form-control" ng-model="workout.rounds" placeholder="rounds" min="1">
 				</div>
 			</div>
 		</div>

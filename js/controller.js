@@ -1,5 +1,21 @@
 var fattyApp = angular.module('fattyApp', ['ngRoute']);
 
+fattyApp.factory('Workout', function() {
+	return {
+		sequences: [
+	    	{
+	    		id: 0,
+	    		exercice: 20,
+	    		rest: 0
+	    	},
+	    	{
+	    		id: 1
+	    	}
+		],
+		rounds: 1
+	}
+});
+
 // configure our routes
 fattyApp.config(function($routeProvider) {
 	$routeProvider
@@ -17,27 +33,18 @@ fattyApp.config(function($routeProvider) {
 		})
 });
 
-fattyApp.controller('mainController', function($scope) {
-    $scope.sequences = [
-    	{
-    		id: 0,
-    		exercice: 20,
-    		rest: 0
-    	},
-    	{
-    		id: 1
-    	}
-    ];
+fattyApp.controller('mainController', function($scope, Workout) {
+	$scope.workout = Workout;
 
     $scope.addSequence = function() {
-    	var sequenceId = $scope.sequences.length;
-    	$scope.sequences.push({
+    	var sequenceId = $scope.workout.sequences.length;
+    	$scope.workout.sequences.push({
     		id: sequenceId
     	});
     };
 
     $scope.showAddSequence = function(seq) {
-    	return seq.id == $scope.sequences.length - 1;
+    	return seq.id == $scope.workout.sequences.length - 1;
     };
 
     $scope.showLabel = function(seq) {
@@ -45,27 +52,33 @@ fattyApp.controller('mainController', function($scope) {
     };
 });
 
-fattyApp.controller('workoutController', function($scope, $http) {
-	console.log($scope.sequences)
-	$scope.sequences = $scope.sequences.filter(function (e) {
+fattyApp.controller('workoutController', function($scope, $http, Workout) {
+	$scope.workout = Workout;
+
+	$scope.workout.sequences = $scope.workout.sequences.filter(function (e) {
 		return !isNaN(parseFloat(e.exercice));
 	});
 
-	console.log($scope.sequences)
+	var sequences = $scope.workout.sequences;
+	var generalCount = sequences
+		.map(function (e) {
+			if (isNaN(parseFloat(e.rest))) {
+				e.rest = 0;
+			}
 
-	var generalCount = $scope.sequences.reduce(function (a, b) { 
-		return {
-			exercice: a.exercice + b.exercice, 
-			rest: b.rest+ a.rest
-		};
-	});
-
-	console.log(generalCount)
+			return e.exercice + e.rest;
+		})
+		.reduce(function (a, b) {
+			return a + b;
+		});
 
 	clock = $('#general-counter').FlipClock(generalCount, {
         clockFace: 'MinuteCounter',
         countdown: true,
         callbacks: {
+        	start: function() {
+        		$('.message').html('The clock has started!');
+        	},
         	stop: function() {
         		$('.message').html('The clock has stopped!');
         	}
