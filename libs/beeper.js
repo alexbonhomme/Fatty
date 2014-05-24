@@ -88,4 +88,9 @@ function createBeeper(soundURL) {
     return beep;
 }
 
+//-----------------------------------------------------------------------------
+// install some globals
+//-----------------------------------------------------------------------------
+window.createBeeper = createBeeper;
+
 })();
