@@ -57,14 +57,28 @@ fattyApp.controller('mainController', function($scope, Workout) {
 
 fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	$scope.workout = Workout;
-	
-	var sequenceIdx = 0;
-	var roundIdx = 0;
-	
+	$scope.sequenceMessage = '';
+
 	// prepare sounds
-	var beep = createBeeper("asset/beep.mp3");
+	var beep  = createBeeper("asset/beep.mp3");
 	var bleep = createBeeper("asset/bleep.mp3");
-	var tada = createBeeper("asset/tada.mp3");
+	var tada  = createBeeper("asset/tada.mp3");
+
+
+	/*
+	 * Get the quote and display it
+	 */
+	$http.get("http://api.theysaidso.com/qod.json")
+     	.success(function(data) {
+     		console.log(data);
+            $scope.quote = {
+            	text: data.contents.quote,
+            	author: data.contents.author
+            };
+        })
+        .error(function() {
+            console.log("Unable to get the quote!");
+        });
 
 
 	// Clean sequences array
@@ -72,9 +86,11 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 		return !isNaN(parseFloat(e.exercice));
 	});
 
+
 	/*
 	 * Compute sequence duration
 	 */
+	var sequenceIdx = 0;
 	var sequences = $scope.workout.sequences;
 	var sequencesDuration = sequences
 		.map(function (e) {
@@ -93,6 +109,7 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	/*
 	 * Computes the total duration
 	 */
+	var roundIdx = 0;
 	var rounds = $scope.workout.rounds;
 	var totalDuration = (sequencesDuration * rounds.total) + (rounds.rest * (rounds.total - 1));
 
@@ -145,7 +162,16 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	};
 
 	$scope.endWorkout = function() {
+		setSequenceMessage('Done!')
 		tada();
+	};
+
+	var setSequenceMessage = function(message) {
+		$('#sequenceMessage').text(message);
+	};
+
+	var getQuote = function() {
+		
 	};
 
 	/**
@@ -186,7 +212,7 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 
 		callbacks.sequence = {
 			start: function() {
-				//$scope.sequenceMessage = 'Exercice';
+				setSequenceMessage('Exercice');
         		bleep();
         	},
         	stop: function() {
@@ -211,7 +237,7 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	var startRest = function(duration, next) {
 		callbacks.sequence = {
 			start: function() {
-				//$scope.sequenceMessage = 'Rest';
+				setSequenceMessage('Rest');
         		beep();
         	},
         	stop: function() {

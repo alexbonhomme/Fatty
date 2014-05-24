@@ -1,6 +1,8 @@
 <blockquote>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-  <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+  <p>{{quote.text}}</p>
+  <footer>
+    <cite title="{{quote.author}}">{{quote.author}}</cite>
+ </footer>
 </blockquote>
 
 <div class="panel panel-default">
@@ -17,7 +19,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
-                <p class="lead text-center">{{sequenceMessage}}</p>
+                <p id="sequenceMessage" class="lead text-center"></p>
             </div>
         </div>
         <div class="row">
@@ -36,10 +38,6 @@
         <button class="btn btn-primary" ng-click="startWorkout()">Let's do it!</button>
     </div>
 </div>
-
-{{workout | json}}
-
-
 
 <!-- JavaScript libraries
 ================================================== -->
