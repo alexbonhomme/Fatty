@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="fattyApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Alexandre Bonhomme">
+
+    <title>Fatty</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="libs/flipclock/flipclock.css">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+
+  <body ng-controller="mainController">
+
+    <div class="container">
+
+      <header class="header">
+        <h3 class="text-muted">Fatty <small>boom boom!</small></h3>
+      </header>
+
+      <!-- MAIN CONTENT AND INJECTED VIEWS -->
+      <div id="main">
+
+        <!-- angular templating -->
+        <!-- this is where content will be injected -->
+        <div ng-view></div>
+        
+      </div>
+
+      <footer class="footer">
+        <p>&copy; Alexandre Bonhomme 2014</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+
+    <!-- JavaScript libraries
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    
+    <!-- Bootstrap -->
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js"></script>
+
+    <!-- Controller -->
+    <script src="js/controller.js"></script>
+  </body>
+</html>
