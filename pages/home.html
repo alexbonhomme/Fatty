@@ -47,7 +47,14 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Number of rounds</label>
 				<div class="col-sm-2">
-					<input type="number" class="form-control" ng-model="workout.rounds" placeholder="rounds" min="1">
+					<input type="number" class="form-control" ng-model="workout.rounds.total" placeholder="rounds" min="1">
+				</div>
+				<label class="col-sm-4 control-label">Rest beetween rounds</label>
+				<div class="col-sm-3">
+					<div class="input-group">
+						<input type="number" class="form-control" ng-model="workout.rounds.rest" placeholder="time" min="0" step="10" required>
+						<span class="input-group-addon">Seconds</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -59,5 +66,5 @@
 		</div>
 	</div>
 
-	{{sequences}}
+	{{workout | json}}
 </form>

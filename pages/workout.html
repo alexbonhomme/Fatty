@@ -1,5 +1,7 @@
-
-<div class="message"></div>
+<blockquote>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+  <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+</blockquote>
 
 <div class="panel panel-default">
     <div class="panel-heading">General counter</div>
@@ -12,14 +14,31 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">Sequence counter</div>
-    <div class="panel-body row">
-        <div class="col-sm-6 col-sm-offset-3">
-            <div class="clock"></div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+                <p class="lead text-center">{{sequenceMessage}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div id="sequence-counter"></div>
+            </div>
         </div>
     </div>
 </div>
 
-<a class="btn btn-default" href="#">back</a>
+<div class="row">
+    <div class="col-sm-2 col-sm-offset-4">
+        <a class="btn btn-link pull-right" href="#">Back</a>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-primary" ng-click="startWorkout()">Let's do it!</button>
+    </div>
+</div>
+
+{{workout | json}}
+
 
 <!-- JavaScript libraries
 ================================================== -->
