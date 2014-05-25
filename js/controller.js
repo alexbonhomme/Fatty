@@ -5,7 +5,7 @@ fattyApp.factory('Workout', function() {
 		sequences: [
 	    	{
 	    		id: 0,
-	    		exercice: 10,
+	    		exercice: 20,
 	    		rest: 10
 	    	},
 	    	{
@@ -13,8 +13,8 @@ fattyApp.factory('Workout', function() {
 	    	}
 		],
 		rounds: {
-			total: 2,
-			rest: 5
+			total: 1,
+			rest: 60
 		}
 	}
 });
