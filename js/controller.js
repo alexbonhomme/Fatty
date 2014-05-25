@@ -162,7 +162,7 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	};
 
 	$scope.endWorkout = function() {
-		setSequenceMessage('Done!')
+		setSequenceMessage('Bravo!')
 		tada();
 	};
 
