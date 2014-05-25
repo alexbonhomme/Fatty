@@ -80,18 +80,16 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
             console.log("Unable to get the quote!");
         });
 
-
-	// Clean sequences array
-	$scope.workout.sequences = $scope.workout.sequences.filter(function (e) {
-		return !isNaN(parseFloat(e.exercice));
-	});
-
-
 	/*
 	 * Compute sequence duration
 	 */
 	var sequenceIdx = 0;
-	var sequences = $scope.workout.sequences;
+
+	// Clean sequences array
+	var sequences = $scope.workout.sequences.filter(function (e) {
+		return !isNaN(parseFloat(e.exercice));
+	});
+
 	var sequencesDuration = sequences
 		.map(function (e) {
 			if (isNaN(parseFloat(e.rest))) {
