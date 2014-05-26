@@ -46,6 +46,15 @@ fattyApp.controller('mainController', function($scope, Workout) {
     	});
     };
 
+    $scope.copySequence = function(seq) {
+    	var sequenceId = $scope.workout.sequences.length;
+    	$scope.workout.sequences.push({
+    		id: sequenceId,
+    		exercice: seq.exercice,
+    		rest: seq.rest
+    	});
+    };
+
     $scope.showAddSequence = function(seq) {
     	return seq.id == $scope.workout.sequences.length - 1;
     };

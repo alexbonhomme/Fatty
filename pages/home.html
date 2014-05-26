@@ -17,23 +17,30 @@
 					</button>
 				</div>
 				
-				<label class="col-sm-3 control-label" ng-show="showLabel(seq)">Exercice duration</label>
+				<label class="col-sm-3 control-label" ng-show="showLabel(seq)">Exercice</label>
 				<div class="col-sm-3" ng-hide="showLabel(seq) || showAddSequence(seq)"></div>
 				<div class="col-sm-3">
 					<div class="input-group">
 						<input type="number" class="form-control" ng-model="seq.exercice" placeholder="time" min="10" step="5" required>
 						<span class="input-group-addon">Seconds</span>
 					</div>
-					
 				</div>
 
-				<label class="col-sm-3 control-label" ng-show="showLabel(seq)">Rest duration</label>
-				<div class="col-sm-3" ng-hide="showLabel(seq)"></div>
+				
+
+				<label class="col-sm-2 control-label" ng-show="showLabel(seq)">Rest</label>
+				<div class="col-sm-2" ng-hide="showLabel(seq)"></div>
 				<div class="col-sm-3">
 					<div class="input-group">
 						<input type="number" class="form-control" ng-model="seq.rest" placeholder="time" min="0" step="5" required>
 						<span class="input-group-addon">Seconds</span>
 					</div>
+				</div>
+
+				<div class="col-sm-1">
+					<button type="button" class="pull-right btn btn-default" ng-click="copySequence(seq)">
+						<span class="glyphicon glyphicon-repeat"></span>
+					</button>
 				</div>
 				
 			</div>
