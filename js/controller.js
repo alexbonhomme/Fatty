@@ -70,7 +70,6 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	 */
 	$http.get("http://api.theysaidso.com/qod.json")
      	.success(function(data) {
-     		console.log(data);
             $scope.quote = {
             	text: data.contents.quote,
             	author: data.contents.author
