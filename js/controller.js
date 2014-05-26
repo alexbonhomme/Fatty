@@ -214,9 +214,15 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
         		bleep();
         	},
         	stop: function() {
-        		// for the last sequence we do only the 
-        		// round rest, not the sequence rest
-        		if (hasNextSequence() && sequence.rest != 0) {
+        		/*
+        			For the last sequence we do only the 
+        			round rest, not the sequence rest.
+        			
+        			/!\ This essential to take in case that 
+        			the index is actually in the 'currrent sequence' + 1
+        			position. That's why we test if there is one more sequence
+				*/
+        		if (hasSequence() && sequence.rest != 0) {
         			startRest(sequence.rest, nextSequence);
         		} else {
         			nextSequence();
@@ -253,13 +259,6 @@ fattyApp.controller('workoutController', function($scope, $http, Workout) {
 	 */
 	var hasSequence = function() {
 		return sequenceIdx < sequences.length;
-	}
-
-	/*
-	 * There one more sequence at idx + 1
-	 */
-	var hasNextSequence = function() {
-		return sequenceIdx < sequences.length - 1;
 	}
 
 	/*
